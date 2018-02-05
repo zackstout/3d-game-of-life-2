@@ -60,13 +60,14 @@ function setupVals() {
 
 function liveOrDie(x) {
     var neighbors = getNeighbors(x);
+    console.log(neighbors);
     var total = 0;
 
     // Grab total of live neighbors:
-    neighbors.forEach(function(n) {
-      var i = n[0];
-      var j = n[1];
-      var b = n[2];
+    neighbors.forEach(function(x) {
+      var i = x[0];
+      var j = x[1];
+      var b = x[2];
       if (currentVals[i * n + j][b]) {
         total ++;
         console.log('aha', i, j);
@@ -79,7 +80,7 @@ function liveOrDie(x) {
     }
     else if (total == 3) {
       nextVals[x[0] * n + x[1]][2] = 1;
-    } else if (total == 2 && currentVals[x[0] * n + j][2]){
+    } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
       nextVals[x[0] * n + x[1]][2] = 1;
     } else {
       nextVals[x[0] * n + x[1]][2] = 0;
