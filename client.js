@@ -14,7 +14,7 @@ var s = 40 / n;
 var currentVals = [];
 var nextVals = [];
 // [x, z, on/off]:
-var initial = [[10, 10], [10, 11], [10, 12], [11, 9]];
+var initial = [[10, 10], [10, 11], [10, 12], [11, 10], [12, 11]];
 var height = 0;
 
 
@@ -32,15 +32,18 @@ camera.position.x = 20;
 
 
 // -Functions-
+
+// add the initial configuration to the grid's values:
 function initialize() {
   initial.forEach(function(a) {
     // Beautiful: this grabs the cell we care about:
     index = a[0] * n + a[1];
     currentVals[index][2] = 1;
 
-    // Hmm why is it running twice?
     // Ahhh 'let' solving this for us: otherwise, gets hoisted, and line 40 gets messed up.
-    let m = getNeighbors([currentVals[index][0], currentVals[index][1]]);
+    let m = getNeighbors([currentVals[index][0], currentVals[index][1], currentVals[index][2]]);
+
+    // let lod = liveOrDie([currentVals[index][0], currentVals[index][1]]);
     console.log(m);
   });
 }
@@ -85,38 +88,70 @@ function liveOrDie(x) {
 
 // x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
 function getNeighbors(x) {
-    neighbors = [];
+    var neighbors = [];
+    var xPos, yPos, val;
 
+    // ahh yes neighbors also needs to have info about
     if (x[0] > 0) {
-      neighbors.push([x[0] - 1, x[1]]);
+      xPos = x[0] - 1;
+      yPos = x[1];
+      val = currentVals[xPos * n + yPos][2];
+      neighbors.push([x[0] - 1, x[1], val]);
 
       if (x[1] > 0) {
-        neighbors.push([x[0], x[1] - 1]);
-        neighbors.push([x[0] - 1, x[1] - 1]);
+        xPos = x[0];
+        yPos = x[1] - 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0], x[1] - 1, val]);
+        xPos = x[0] - 1;
+        yPos = x[1] - 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0] - 1, x[1] - 1, val]);
       }
 
       //shouldn't it be n-1?:
       if (x[1] < n - 2) {
-        neighbors.push([x[0], x[1] + 1]);
-        neighbors.push([x[0] - 1, x[1] + 1]);
+        xPos = x[0];
+        yPos = x[1] + 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0], x[1] + 1, val]);
+        xPos = x[0] - 1;
+        yPos = x[1] + 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0] - 1, x[1] + 1, val]);
       }
     } else {
       if (x[1] > 0) {
-        neighbors.push([x[0], x[1] - 1]);
+        xPos = x[0];
+        yPos = x[1] - 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0], x[1] - 1, val]);
       }
       if (x[1] < n - 2) {
-        neighbors.push([x[0], x[1] + 1]);
+        xPos = x[0];
+        yPos = x[1] + 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0], x[1] + 1, val]);
       }
     }
 
     if (x[0] < n - 2) {
-      neighbors.push([x[0] + 1, x[1]]);
+      xPos = x[0] + 1;
+      yPos = x[1];
+      val = currentVals[xPos * n + yPos][2];
+      neighbors.push([x[0] + 1, x[1], val]);
 
       if (x[1] > 0) {
-        neighbors.push([x[0] + 1, x[1] - 1]);
+        xPos = x[0] + 1;
+        yPos = x[1] - 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0] + 1, x[1] - 1, val]);
       }
       if (x[1] < n - 2) {
-        neighbors.push([x[0] + 1, x[1] + 1]);
+        xPos = x[0] + 1;
+        yPos = x[1] + 1;
+        val = currentVals[xPos * n + yPos][2];
+        neighbors.push([x[0] + 1, x[1] + 1, val]);
       }
     }
 
@@ -150,10 +185,17 @@ function drawGrid(y) {
   }
 }
 
+function updateGrid() {
+  currentVals.forEach((v) => {
+    liveOrDie(v);
+  });
+}
+
 // -Let's go!-
 setupVals();
 initialize();
 drawGrid(height);
+updateGrid();
 
 var animate = function () {
   setTimeout( function() {
