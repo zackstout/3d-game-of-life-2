@@ -39,9 +39,11 @@ function initialize() {
     // Beautiful: this grabs the cell we care about:
     currentVals[a[0] * n + a[1]][2] = 1;
 
-    console.log(getNeighbors([currentVals[a[0] * n + a[1]][0], currentVals[a[0] * n + a[1]][1]]));
-
-
+    // Checking getNeighbors function:
+    // Hmm why is it running twice?
+    // Ahhh 'let' solving this for us: otherwise, gets hoisted, and line 40 gets messed up.
+    let m = getNeighbors([currentVals[a[0] * n + a[1]][0], currentVals[a[0] * n + a[1]][1]]);
+    console.log(m);
   });
 
   // perfect, we got them:
@@ -55,9 +57,37 @@ function setupVals() {
   for (var i=0; i < n; i++) {
     for (var j=0; j < n; j++) {
       currentVals.push([i, j, 0]);
+      nextVals.push([i, j, 0]);
     }
   }
 }
+
+function liveOrDie(x) {
+    var neighbors = getNeighbors(x);
+    var total = 0;
+
+    neighbors.forEach(function(n) {
+      var i = n[0];
+      var j = n[1];
+      var b = n[2];
+      if (currentVals[i * n + j][b]) {
+        total ++;
+        console.log('aha', i, j);
+      }
+    });
+
+    // Game of Life logic:
+    if (total < 2 || total > 3) {
+      nextVals[x[0] * n + x[1]][2] = 1;
+    }
+    else if (total == 3) {
+      nextVals[x[0] * n + x[1]][2] = 1;
+    } else if (total == 2 && currentVals[x[0] * n + j][2]){
+      nextVals[x[0] * n + x[1]][2] = 1;
+    } else {
+      nextVals[x[0] * n + x[1]][2] = 0;
+    }
+  }
 
 // x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
 function getNeighbors(x) {
