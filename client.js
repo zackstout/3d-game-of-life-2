@@ -7,25 +7,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight );
 //eh?
-renderer.shadowMap.enabled = true;
-
-// hmm, no visible change yet...
-// textureLoader = new THREE.TextureLoader();
-// var ambientLight = new THREE.AmbientLight( 0x404040 );
-// scene.add( ambientLight );
-// var light = new THREE.DirectionalLight( 0xffffff, 1 );
-// light.position.set( -10, 10, 5 );
-// light.castShadow = true;
-// var d = 10;
-// light.shadow.camera.left = -d;
-// light.shadow.camera.right = d;
-// light.shadow.camera.top = d;
-// light.shadow.camera.bottom = -d;
-// light.shadow.camera.near = 2;
-// light.shadow.camera.far = 50;
-// light.shadow.mapSize.x = 1024;
-// light.shadow.mapSize.y = 1024;
-// scene.add( light );
+// renderer.shadowMap.enabled = true;
 
 document.body.appendChild( renderer.domElement );
 
@@ -36,29 +18,33 @@ var geometry, cube;
 var material = new THREE.MeshBasicMaterial( { color: color } );
 var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
 
-// var s = 1;
-// var s;
+// Number of cells:
 var n = 20;
+// Size of each cell: ensures size is always 40 units.
 var s = 40 / n;
 
-function drawGrid(num) {
-  // s = 40 / num;
-  for (var i=0; i < num; i++) {
-    for (var j=0; j < num; j++) {
-      pos.set(i * s, 0, j * s);
+function drawGrid(y) {
+  for (var i=0; i < n; i++) {
+    for (var j=0; j < n; j++) {
+      // Increment position by the size of each box:
+      pos.set(i * s, y, j * s);
       geometry = new THREE.BoxGeometry(s, s, s);
+      // randomize color:
       if (Math.random() > 0.5) {
         cube = new THREE.Mesh( geometry, material );
       } else {
         cube = new THREE.Mesh( geometry, material2 );
       }
+      // wonder whether we need copy:
       cube.position.copy( pos );
       scene.add( cube );
     }
   }
 }
 
-drawGrid(n);
+var height = 0;
+
+drawGrid(height);
 
 camera.position.z = 45;
 camera.position.y = 10;
@@ -66,12 +52,10 @@ camera.position.x = 20;
 
 var animate = function () {
   requestAnimationFrame( animate );
-
-  // cube.rotation.x += 0.01;
-  // cube.rotation.y += 0.01;
-  // cube.rotation.z += 0.02;
-
   renderer.render(scene, camera);
+  // drawGrid(height);
+  // height += 0.1;
+
 };
 
 animate();
