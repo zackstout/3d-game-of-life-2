@@ -14,7 +14,9 @@ var s = 40 / n;
 var currentVals = [];
 var nextVals = [];
 // [x, z, on/off]:
-var initial = [[10, 10], [10, 11], [10, 12], [11, 10], [12, 11]];
+// var initial = [[10, 10], [10, 11], [10, 12], [11, 10], [12, 11]];
+var initial = [[15, 15], [15, 16], [15, 17], [16, 15], [17, 16]];
+
 var height = 0;
 
 
@@ -198,12 +200,15 @@ function drawGrid(y) {
 
       if (currentVals[i * n + j][2]) {
         cube = new THREE.Mesh( geometry, material );
+        // wonder whether we need copy:
+        cube.position.copy( pos );
+        scene.add( cube );
       } else {
-        cube = new THREE.Mesh( geometry, material2 );
+        // cube = new THREE.Mesh( geometry, material2 );
       }
-      // wonder whether we need copy:
-      cube.position.copy( pos );
-      scene.add( cube );
+      // // wonder whether we need copy:
+      // cube.position.copy( pos );
+      // scene.add( cube );
     }
   }
 
@@ -250,11 +255,11 @@ var animate = function () {
   setTimeout( function() {
     drawGrid(height);
     height += 1;
-    camera.position.y = 10 + height;
+    // camera.position.y = 10 + height;
 
     requestAnimationFrame( animate );
 
-  }, 1000 );  renderer.render(scene, camera);
+  }, 300 );  renderer.render(scene, camera);
 
 };
 
