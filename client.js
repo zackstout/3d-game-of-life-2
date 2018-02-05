@@ -37,17 +37,25 @@ var pos = new THREE.Vector3();
 //   y: 0,
 //   z: 0
 // };
+var color = new THREE.Color("rgb(100, 200, 30)");
+var color2 = new THREE.Color("rgb(0, 0, 255)");
 
-var color = new THREE.Color("rgb(255, 0, 0)");
 var geometry, cube;
 var material = new THREE.MeshBasicMaterial( { color: color } );
+var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
+
+var s = 0.8;
 
 // oh of course, this just puts them all on top of each other:
 for (var i=0; i < 40; i++) {
   for (var j=0; j < 40; j++) {
     pos.set(i, 0, j);
-    geometry = new THREE.BoxGeometry(1, 1, 1);
-    cube = new THREE.Mesh( geometry, material );
+    geometry = new THREE.BoxGeometry(s, s, s);
+    if (Math.random() > 0.5) {
+      cube = new THREE.Mesh( geometry, material );
+    } else {
+      cube = new THREE.Mesh( geometry, material2 );
+    }
     cube.position.copy( pos );
     // position.x ++;
     // position.y ++;
