@@ -6,6 +6,8 @@ var color2 = new THREE.Color("rgb(0, 0, 255)");
 var geometry, cube;
 var material = new THREE.MeshBasicMaterial( { color: color } );
 var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
+
+var threeD = false;
 // Number of cells:
 var n = 20;
 // Size of each cell: ensures size is always 40 units.
@@ -32,7 +34,17 @@ camera.position.z = 45;
 camera.position.y = 10 + height;
 camera.position.x = 20;
 
-console.log(camera);
+// console.log(camera);
+// renderer.shadowMap.enabled = true;
+//
+// var light = new THREE.PointLight( 0xffffff, 1, 100 );
+// light.position.set( 0, 10, 0 );
+// light.castShadow = true;            // default false
+// scene.add( light );
+// light.shadow.mapSize.width = 512;  // default
+// light.shadow.mapSize.height = 512; // default
+// light.shadow.camera.near = 0.5;       // default
+// light.shadow.camera.far = 500;      // default
 
 // camera.rotation.y =  Math.PI / 8;
 
@@ -55,7 +67,7 @@ function initialize() {
     // console.log(m);
   });
   // Seems to be working correctly here:
-  console.log(getNeighbors([12, 13]));
+  // console.log(getNeighbors([12, 13]));
 }
 
 function setupVals() {
@@ -184,7 +196,7 @@ function getNeighbors(x) {
 
 
 function drawGrid(y) {
-  console.log(currentVals);
+  // console.log(currentVals);
   for (var i=0; i < n; i++) {
     for (var j=0; j < n; j++) {
       // Increment position by the size of each box:
@@ -198,17 +210,30 @@ function drawGrid(y) {
       //   cube = new THREE.Mesh( geometry, material2 );
       // }
 
-      if (currentVals[i * n + j][2]) {
-        cube = new THREE.Mesh( geometry, material );
-        // wonder whether we need copy:
-        cube.position.copy( pos );
-        scene.add( cube );
+
+      if (threeD) {
+        if (currentVals[i * n + j][2]) {
+          cube = new THREE.Mesh( geometry, material );
+          // wonder whether we need copy:
+          cube.position.copy( pos );
+          cube.receiveShadow = true;
+          cube.castShadow = true;
+          scene.add( cube );
+        }
       } else {
-        // cube = new THREE.Mesh( geometry, material2 );
+        if (currentVals[i * n + j][2]) {
+          cube = new THREE.Mesh( geometry, material );
+          // wonder whether we need copy:
+        } else {
+          cube = new THREE.Mesh( geometry, material2 );
+        }
+
+        cube.position.copy( pos );
+        cube.receiveShadow = true;
+        cube.castShadow = true;
+        scene.add( cube );
       }
-      // // wonder whether we need copy:
-      // cube.position.copy( pos );
-      // scene.add( cube );
+
     }
   }
 
@@ -255,7 +280,9 @@ var animate = function () {
   setTimeout( function() {
     drawGrid(height);
     height += 1;
-    // camera.position.y = 10 + height;
+    if (!threeD) {
+      camera.position.y = 10 + height;
+    }
 
     requestAnimationFrame( animate );
 
