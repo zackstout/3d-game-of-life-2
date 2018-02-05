@@ -82,23 +82,24 @@ function liveOrDie(x) {
       }
     });
     if (total == 3 ) {
-      console.log(x[0], x[1]);
+      // yes, this is really working:
+      // console.log(x[0], x[1]);
     }
 
     // Game of Life logic:
-    // if (total < 2 || total > 3) {
-    //   nextVals[x[0] * n + x[1]][2] = 0;
-    // }
-    // else if (total == 3) {
-    //   // console.log('woo');
-    //   nextVals[x[0] * n + x[1]][2] = 1;
-    // } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
-    //   console.log('woo2');
-    //   nextVals[x[0] * n + x[1]][2] = 1;
-    // } else {
-    //   nextVals[x[0] * n + x[1]][2] = 0;
-    // }
-    // total = 0;
+    if (total < 2 || total > 3) {
+      nextVals[x[0] * n + x[1]][2] = 0;
+    }
+    else if (total == 3) {
+      // console.log('woo');
+      nextVals[x[0] * n + x[1]][2] = 1;
+    } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
+      // console.log('woo2');
+      nextVals[x[0] * n + x[1]][2] = 1;
+    } else {
+      nextVals[x[0] * n + x[1]][2] = 0;
+    }
+    total = 0;
   }
 
 // x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
@@ -207,11 +208,12 @@ function updateGrid() {
     liveOrDie(v);
   });
   console.log(currentVals);
-  console.log(nextVals);
+  // console.log(nextVals);
 
-  // currentVals = nextVals;
+  // for drawing next state. Shouldn't need to clear out nextVals, since GoL logic takes care of that:
+  currentVals = nextVals;
   // drawGrid(height);
-  console.log(getNeighbors([12, 11]));
+  // console.log(getNeighbors([12, 11]));
 
 }
 
@@ -224,7 +226,7 @@ drawGrid(height);
 
 var animate = function () {
   setTimeout( function() {
-    // drawGrid(height);
+    drawGrid(height);
     // height += 0.1;
     requestAnimationFrame( animate );
 
