@@ -38,14 +38,14 @@ var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
 
 // var s = 1;
 // var s;
-var n = 50;
+var n = 20;
 var s = 40 / n;
 
 function drawGrid(num) {
   // s = 40 / num;
   for (var i=0; i < num; i++) {
     for (var j=0; j < num; j++) {
-      pos.set(i, 0, j);
+      pos.set(i * s, 0, j * s);
       geometry = new THREE.BoxGeometry(s, s, s);
       if (Math.random() > 0.5) {
         cube = new THREE.Mesh( geometry, material );
@@ -60,9 +60,9 @@ function drawGrid(num) {
 
 drawGrid(n);
 
-camera.position.z = n + 10;
+camera.position.z = 45;
 camera.position.y = 10;
-camera.position.x = n / 2;
+camera.position.x = 20;
 
 var animate = function () {
   requestAnimationFrame( animate );
