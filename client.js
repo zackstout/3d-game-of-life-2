@@ -33,7 +33,7 @@ camera.position.x = 20;
 
 // -Functions-
 
-// add the initial configuration to the grid's values:
+// Add the initial configuration to the grid's values:
 function initialize() {
   initial.forEach(function(a) {
     // Beautiful: this grabs the cell we care about:
@@ -41,11 +41,13 @@ function initialize() {
     currentVals[index][2] = 1;
 
     // Ahhh 'let' solving this for us: otherwise, gets hoisted, and line 40 gets messed up.
-    let m = getNeighbors([currentVals[index][0], currentVals[index][1], currentVals[index][2]]);
+    // let m = getNeighbors([currentVals[index][0], currentVals[index][1], currentVals[index][2]]);
 
     // let lod = liveOrDie([currentVals[index][0], currentVals[index][1]]);
-    console.log(m);
+    // console.log(m);
   });
+  // Seems to be working correctly here:
+  console.log(getNeighbors([12, 13]));
 }
 
 function setupVals() {
@@ -62,14 +64,15 @@ function liveOrDie(x) {
     var neighbors = getNeighbors(x);
     // console.log(neighbors);
     var total = 0;
+    var oh, one, val;
 
     // console.log(currentVals);
     // Grab total of live neighbors:
     neighbors.forEach(function(x) {
       // total = 0;
-      var oh = x[0];
-      var one = x[1];
-      var val = x[2];
+      oh = x[0];
+      one = x[1];
+      val = x[2];
 
       // strange that we had to add ==1 to get it to work here: .... No it's not. we were referring incorrectly.
       if (val == 1) {
@@ -77,7 +80,10 @@ function liveOrDie(x) {
         // console.log('aha', i, j);
       }
     });
-    // console.log(total);
+    if (total ==3 ) {
+      console.log(oh, one);
+
+    }
 
     // Game of Life logic:
     if (total < 2 || total > 3) {
@@ -196,13 +202,15 @@ function drawGrid(y) {
 
 function updateGrid() {
   currentVals.forEach((v) => {
-    liveOrDie(v);
+    // liveOrDie(v);
   });
   console.log(currentVals);
   console.log(nextVals);
 
   // currentVals = nextVals;
   drawGrid(height);
+  console.log(getNeighbors([12, 10]));
+
 }
 
 // -Let's go!-
@@ -213,12 +221,11 @@ updateGrid();
 
 var animate = function () {
   setTimeout( function() {
-
+    drawGrid(height);
+    height += 0.1;
       requestAnimationFrame( animate );
 
   }, 1000 );  renderer.render(scene, camera);
-  // drawGrid(height);
-  // height += 0.1;
 
 };
 
