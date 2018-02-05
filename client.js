@@ -58,8 +58,9 @@ for (var i=0; i < 40; i++) {
 }
 // var geometry = new THREE.BoxGeometry( 40, 1, 40 );
 
-camera.position.z = 5;
-camera.position.y = 1;
+camera.position.z = 50;
+camera.position.y = 10;
+camera.position.x = 20;
 
 var animate = function () {
   requestAnimationFrame( animate );
