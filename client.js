@@ -60,31 +60,39 @@ function setupVals() {
 
 function liveOrDie(x) {
     var neighbors = getNeighbors(x);
-    console.log(neighbors);
+    // console.log(neighbors);
     var total = 0;
 
+    // console.log(currentVals);
     // Grab total of live neighbors:
     neighbors.forEach(function(x) {
-      var i = x[0];
-      var j = x[1];
-      var b = x[2];
-      if (currentVals[i * n + j][b]) {
+      // total = 0;
+      var oh = x[0];
+      var one = x[1];
+      var val = x[2];
+
+      // strange that we had to add ==1 to get it to work here:
+      if (val == 1) {
         total ++;
-        console.log('aha', i, j);
+        // console.log('aha', i, j);
       }
     });
+    console.log(total);
 
     // Game of Life logic:
     if (total < 2 || total > 3) {
-      nextVals[x[0] * n + x[1]][2] = 1;
+      nextVals[x[0] * n + x[1]][2] = 0;
     }
     else if (total == 3) {
+      // console.log('woo');
       nextVals[x[0] * n + x[1]][2] = 1;
     } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
+      console.log('woo2');
       nextVals[x[0] * n + x[1]][2] = 1;
     } else {
       nextVals[x[0] * n + x[1]][2] = 0;
     }
+    total = 0;
   }
 
 // x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
@@ -111,7 +119,7 @@ function getNeighbors(x) {
       }
 
       //shouldn't it be n-1?:
-      if (x[1] < n - 2) {
+      if (x[1] < n - 1) {
         xPos = x[0];
         yPos = x[1] + 1;
         val = currentVals[xPos * n + yPos][2];
@@ -128,7 +136,7 @@ function getNeighbors(x) {
         val = currentVals[xPos * n + yPos][2];
         neighbors.push([x[0], x[1] - 1, val]);
       }
-      if (x[1] < n - 2) {
+      if (x[1] < n - 1) {
         xPos = x[0];
         yPos = x[1] + 1;
         val = currentVals[xPos * n + yPos][2];
@@ -136,7 +144,7 @@ function getNeighbors(x) {
       }
     }
 
-    if (x[0] < n - 2) {
+    if (x[0] < n - 1) {
       xPos = x[0] + 1;
       yPos = x[1];
       val = currentVals[xPos * n + yPos][2];
@@ -148,7 +156,7 @@ function getNeighbors(x) {
         val = currentVals[xPos * n + yPos][2];
         neighbors.push([x[0] + 1, x[1] - 1, val]);
       }
-      if (x[1] < n - 2) {
+      if (x[1] < n - 1) {
         xPos = x[0] + 1;
         yPos = x[1] + 1;
         val = currentVals[xPos * n + yPos][2];
@@ -190,6 +198,8 @@ function updateGrid() {
   currentVals.forEach((v) => {
     liveOrDie(v);
   });
+  console.log(currentVals);
+  console.log(nextVals);
 }
 
 // -Let's go!-
