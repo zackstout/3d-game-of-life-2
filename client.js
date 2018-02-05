@@ -35,24 +35,20 @@ camera.position.x = 20;
 function initialize() {
   initial.forEach(function(a) {
     // Beautiful: this grabs the cell we care about:
-    currentVals[a[0] * n + a[1]][2] = 1;
+    index = a[0] * n + a[1];
+    currentVals[index][2] = 1;
 
     // Hmm why is it running twice?
     // Ahhh 'let' solving this for us: otherwise, gets hoisted, and line 40 gets messed up.
-    let m = getNeighbors([currentVals[a[0] * n + a[1]][0], currentVals[a[0] * n + a[1]][1]]);
+    let m = getNeighbors([currentVals[index][0], currentVals[index][1]]);
     console.log(m);
   });
-
-  // perfect, we got them:
-  // console.log(currentVals);
 }
-
-// Hmm, an issue where we want to call drawGrid before initialize (to get currentVals) but also vice versa (to draw correctly)....
-
 
 function setupVals() {
   for (var i=0; i < n; i++) {
     for (var j=0; j < n; j++) {
+      // Initialize both arrays with all elements starting at value 0:
       currentVals.push([i, j, 0]);
       nextVals.push([i, j, 0]);
     }
@@ -63,6 +59,7 @@ function liveOrDie(x) {
     var neighbors = getNeighbors(x);
     var total = 0;
 
+    // Grab total of live neighbors:
     neighbors.forEach(function(n) {
       var i = n[0];
       var j = n[1];
@@ -151,8 +148,6 @@ function drawGrid(y) {
       scene.add( cube );
     }
   }
-
-  // initialize();
 }
 
 // -Let's go!-
