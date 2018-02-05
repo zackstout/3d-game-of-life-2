@@ -71,13 +71,13 @@ function liveOrDie(x) {
       var one = x[1];
       var val = x[2];
 
-      // strange that we had to add ==1 to get it to work here:
+      // strange that we had to add ==1 to get it to work here: .... No it's not. we were referring incorrectly.
       if (val == 1) {
         total ++;
         // console.log('aha', i, j);
       }
     });
-    console.log(total);
+    // console.log(total);
 
     // Game of Life logic:
     if (total < 2 || total > 3) {
@@ -200,6 +200,9 @@ function updateGrid() {
   });
   console.log(currentVals);
   console.log(nextVals);
+
+  // currentVals = nextVals;
+  drawGrid(height);
 }
 
 // -Let's go!-
