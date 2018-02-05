@@ -1,45 +1,42 @@
 
-var scene = new THREE.Scene();
-// Can set background color in one of two ways. this is first:
-scene.background = new THREE.Color( 0xB0E0E6 );
-
-// Number of cells:
-var n = 20;
-// Size of each cell: ensures size is always 40 units.
-var s = 40 / n;
-
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
-var renderer = new THREE.WebGLRenderer({ alpha: true });
-//eh?
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
-
-// second way to set background color (requires alpha):
-// renderer.setClearColor( 0xB0E0E6, 0);
-
-document.body.appendChild( renderer.domElement );
-
+// -Global variables-
 var pos = new THREE.Vector3();
 var color = new THREE.Color("rgb(100, 50, 30)");
 var color2 = new THREE.Color("rgb(0, 0, 255)");
 var geometry, cube;
 var material = new THREE.MeshBasicMaterial( { color: color } );
 var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
-
+// Number of cells:
+var n = 20;
+// Size of each cell: ensures size is always 40 units.
+var s = 40 / n;
 // array of arrays:
 var currentVals = [];
 var nextVals = [];
-
 // [x, z, on/off]:
 var initial = [[10, 10], [10, 11], [10, 12], [11, 9]];
+var height = 0;
 
+
+// -Setting up three.js-
+var scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xB0E0E6 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+var renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+camera.position.z = 45;
+camera.position.y = 10;
+camera.position.x = 20;
+
+
+// -Functions-
 function initialize() {
   initial.forEach(function(a) {
     // Beautiful: this grabs the cell we care about:
     currentVals[a[0] * n + a[1]][2] = 1;
 
-    // Checking getNeighbors function:
     // Hmm why is it running twice?
     // Ahhh 'let' solving this for us: otherwise, gets hoisted, and line 40 gets messed up.
     let m = getNeighbors([currentVals[a[0] * n + a[1]][0], currentVals[a[0] * n + a[1]][1]]);
@@ -130,7 +127,6 @@ function getNeighbors(x) {
   } // end getNeighbors
 
 
-
 function drawGrid(y) {
   for (var i=0; i < n; i++) {
     for (var j=0; j < n; j++) {
@@ -156,21 +152,13 @@ function drawGrid(y) {
     }
   }
 
-  initialize();
-
+  // initialize();
 }
 
-var height = 0;
-
+// -Let's go!-
 setupVals();
 initialize();
 drawGrid(height);
-
-// console.log(currentVals);
-
-camera.position.z = 45;
-camera.position.y = 10;
-camera.position.x = 20;
 
 var animate = function () {
   setTimeout( function() {
