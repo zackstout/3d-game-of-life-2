@@ -29,6 +29,7 @@ var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
 
 // array of arrays:
 var currentVals = [];
+var nextVals = [];
 
 // [x, z, on/off]:
 var initial = [[10, 10], [10, 11], [10, 12], [11, 9]];
@@ -38,10 +39,13 @@ function initialize() {
     // Beautiful: this grabs the cell we care about:
     currentVals[a[0] * n + a[1]][2] = 1;
 
+    console.log(getNeighbors([currentVals[a[0] * n + a[1]][0], currentVals[a[0] * n + a[1]][1]]));
+
+
   });
 
   // perfect, we got them:
-  console.log(currentVals);
+  // console.log(currentVals);
 }
 
 // Hmm, an issue where we want to call drawGrid before initialize (to get currentVals) but also vice versa (to draw correctly)....
@@ -54,6 +58,48 @@ function setupVals() {
     }
   }
 }
+
+// x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
+function getNeighbors(x) {
+    neighbors = [];
+
+    if (x[0] > 0) {
+      neighbors.push([x[0] - 1, x[1]]);
+
+      if (x[1] > 0) {
+        neighbors.push([x[0], x[1] - 1]);
+        neighbors.push([x[0] - 1, x[1] - 1]);
+      }
+
+      //shouldn't it be n-1?:
+      if (x[1] < n - 2) {
+        neighbors.push([x[0], x[1] + 1]);
+        neighbors.push([x[0] - 1, x[1] + 1]);
+      }
+    } else {
+      if (x[1] > 0) {
+        neighbors.push([x[0], x[1] - 1]);
+      }
+      if (x[1] < n - 2) {
+        neighbors.push([x[0], x[1] + 1]);
+      }
+    }
+
+    if (x[0] < n - 2) {
+      neighbors.push([x[0] + 1, x[1]]);
+
+      if (x[1] > 0) {
+        neighbors.push([x[0] + 1, x[1] - 1]);
+      }
+      if (x[1] < n - 2) {
+        neighbors.push([x[0] + 1, x[1] + 1]);
+      }
+    }
+
+    return neighbors;
+  } // end getNeighbors
+
+
 
 function drawGrid(y) {
   for (var i=0; i < n; i++) {
@@ -90,7 +136,7 @@ setupVals();
 initialize();
 drawGrid(height);
 
-console.log(currentVals);
+// console.log(currentVals);
 
 camera.position.z = 45;
 camera.position.y = 10;
