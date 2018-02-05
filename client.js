@@ -68,11 +68,12 @@ function liveOrDie(x) {
 
     // console.log(currentVals);
     // Grab total of live neighbors:
-    neighbors.forEach(function(x) {
+    // jeezo more namespacing errors:
+    neighbors.forEach(function(neighbor) {
       // total = 0;
-      oh = x[0];
-      one = x[1];
-      val = x[2];
+      oh = neighbor[0];
+      one = neighbor[1];
+      val = neighbor[2];
 
       // strange that we had to add ==1 to get it to work here: .... No it's not. we were referring incorrectly.
       if (val == 1) {
@@ -80,25 +81,24 @@ function liveOrDie(x) {
         // console.log('aha', i, j);
       }
     });
-    if (total ==3 ) {
-      console.log(oh, one);
-
+    if (total == 3 ) {
+      console.log(x[0], x[1]);
     }
 
     // Game of Life logic:
-    if (total < 2 || total > 3) {
-      nextVals[x[0] * n + x[1]][2] = 0;
-    }
-    else if (total == 3) {
-      // console.log('woo');
-      nextVals[x[0] * n + x[1]][2] = 1;
-    } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
-      console.log('woo2');
-      nextVals[x[0] * n + x[1]][2] = 1;
-    } else {
-      nextVals[x[0] * n + x[1]][2] = 0;
-    }
-    total = 0;
+    // if (total < 2 || total > 3) {
+    //   nextVals[x[0] * n + x[1]][2] = 0;
+    // }
+    // else if (total == 3) {
+    //   // console.log('woo');
+    //   nextVals[x[0] * n + x[1]][2] = 1;
+    // } else if (total == 2 && currentVals[x[0] * n + x[1]][2]){
+    //   console.log('woo2');
+    //   nextVals[x[0] * n + x[1]][2] = 1;
+    // } else {
+    //   nextVals[x[0] * n + x[1]][2] = 0;
+    // }
+    // total = 0;
   }
 
 // x is our cell, i.e. array of 3 (e.g. [10, 10, 1]):
@@ -198,18 +198,20 @@ function drawGrid(y) {
       scene.add( cube );
     }
   }
+
+  updateGrid();
 }
 
 function updateGrid() {
   currentVals.forEach((v) => {
-    // liveOrDie(v);
+    liveOrDie(v);
   });
   console.log(currentVals);
   console.log(nextVals);
 
   // currentVals = nextVals;
-  drawGrid(height);
-  console.log(getNeighbors([12, 10]));
+  // drawGrid(height);
+  console.log(getNeighbors([12, 11]));
 
 }
 
@@ -217,13 +219,14 @@ function updateGrid() {
 setupVals();
 initialize();
 drawGrid(height);
-updateGrid();
+
+// updateGrid();
 
 var animate = function () {
   setTimeout( function() {
-    drawGrid(height);
-    height += 0.1;
-      requestAnimationFrame( animate );
+    // drawGrid(height);
+    // height += 0.1;
+    requestAnimationFrame( animate );
 
   }, 1000 );  renderer.render(scene, camera);
 
