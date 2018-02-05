@@ -27,8 +27,14 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 camera.position.z = 45;
-camera.position.y = 10;
+camera.position.y = 10 + height;
 camera.position.x = 20;
+
+console.log(camera);
+
+// camera.rotation.y =  Math.PI / 8;
+
+// camera.
 
 
 // -Functions-
@@ -176,6 +182,7 @@ function getNeighbors(x) {
 
 
 function drawGrid(y) {
+  console.log(currentVals);
   for (var i=0; i < n; i++) {
     for (var j=0; j < n; j++) {
       // Increment position by the size of each box:
@@ -207,11 +214,22 @@ function updateGrid() {
   currentVals.forEach((v) => {
     liveOrDie(v);
   });
-  console.log(currentVals);
+  // this much works: first step, it gets the proper next state in nextVals:
+  // console.log(currentVals);
   // console.log(nextVals);
 
   // for drawing next state. Shouldn't need to clear out nextVals, since GoL logic takes care of that:
-  currentVals = nextVals;
+  // currentVals = nextVals;
+
+  currentVals = [];
+
+  nextVals.forEach((a) => {
+    clone = a.slice(0);
+    currentVals.push(clone);
+  });
+
+  // Seems to have worked...:
+  // console.log(currentVals);
   // drawGrid(height);
   // console.log(getNeighbors([12, 11]));
 
@@ -221,13 +239,19 @@ function updateGrid() {
 setupVals();
 initialize();
 drawGrid(height);
+// drawGrid(height);
+// drawGrid(height);
+
+
 
 // updateGrid();
 
 var animate = function () {
   setTimeout( function() {
     drawGrid(height);
-    // height += 0.1;
+    height += 1;
+    camera.position.y = 10 + height;
+
     requestAnimationFrame( animate );
 
   }, 1000 );  renderer.render(scene, camera);
