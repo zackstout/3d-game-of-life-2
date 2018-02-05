@@ -10,65 +10,59 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.shadowMap.enabled = true;
 
 // hmm, no visible change yet...
-textureLoader = new THREE.TextureLoader();
-var ambientLight = new THREE.AmbientLight( 0x404040 );
-scene.add( ambientLight );
-var light = new THREE.DirectionalLight( 0xffffff, 1 );
-light.position.set( -10, 10, 5 );
-light.castShadow = true;
-var d = 10;
-light.shadow.camera.left = -d;
-light.shadow.camera.right = d;
-light.shadow.camera.top = d;
-light.shadow.camera.bottom = -d;
-light.shadow.camera.near = 2;
-light.shadow.camera.far = 50;
-light.shadow.mapSize.x = 1024;
-light.shadow.mapSize.y = 1024;
-scene.add( light );
+// textureLoader = new THREE.TextureLoader();
+// var ambientLight = new THREE.AmbientLight( 0x404040 );
+// scene.add( ambientLight );
+// var light = new THREE.DirectionalLight( 0xffffff, 1 );
+// light.position.set( -10, 10, 5 );
+// light.castShadow = true;
+// var d = 10;
+// light.shadow.camera.left = -d;
+// light.shadow.camera.right = d;
+// light.shadow.camera.top = d;
+// light.shadow.camera.bottom = -d;
+// light.shadow.camera.near = 2;
+// light.shadow.camera.far = 50;
+// light.shadow.mapSize.x = 1024;
+// light.shadow.mapSize.y = 1024;
+// scene.add( light );
 
 document.body.appendChild( renderer.domElement );
 
 var pos = new THREE.Vector3();
-
-// pos.set( 0, - 0.5, 0 );
-// position = {
-//   x: 0,
-//   y: 0,
-//   z: 0
-// };
-var color = new THREE.Color("rgb(100, 200, 30)");
+var color = new THREE.Color("rgb(100, 50, 30)");
 var color2 = new THREE.Color("rgb(0, 0, 255)");
-
 var geometry, cube;
 var material = new THREE.MeshBasicMaterial( { color: color } );
 var material2 = new THREE.MeshBasicMaterial( { color: color2 } );
 
-var s = 0.8;
+// var s = 1;
+// var s;
+var n = 50;
+var s = 40 / n;
 
-// oh of course, this just puts them all on top of each other:
-for (var i=0; i < 40; i++) {
-  for (var j=0; j < 40; j++) {
-    pos.set(i, 0, j);
-    geometry = new THREE.BoxGeometry(s, s, s);
-    if (Math.random() > 0.5) {
-      cube = new THREE.Mesh( geometry, material );
-    } else {
-      cube = new THREE.Mesh( geometry, material2 );
+function drawGrid(num) {
+  // s = 40 / num;
+  for (var i=0; i < num; i++) {
+    for (var j=0; j < num; j++) {
+      pos.set(i, 0, j);
+      geometry = new THREE.BoxGeometry(s, s, s);
+      if (Math.random() > 0.5) {
+        cube = new THREE.Mesh( geometry, material );
+      } else {
+        cube = new THREE.Mesh( geometry, material2 );
+      }
+      cube.position.copy( pos );
+      scene.add( cube );
     }
-    cube.position.copy( pos );
-    // position.x ++;
-    // position.y ++;
-    scene.add( cube );
   }
-  // position.z ++;
-
 }
-// var geometry = new THREE.BoxGeometry( 40, 1, 40 );
 
-camera.position.z = 50;
+drawGrid(n);
+
+camera.position.z = n + 10;
 camera.position.y = 10;
-camera.position.x = 20;
+camera.position.x = n / 2;
 
 var animate = function () {
   requestAnimationFrame( animate );
